@@ -22,7 +22,8 @@
 // Exception handling happens in two phases: a search phase and a cleanup phase.
 //
 // In both phases the unwinder walks stack frames from top to bottom using information from
-// the stack frame unwind sections of the current process's modules.
+// the stack frame unwind sections of the current process's modules ("module" here refers to
+// an OS module, i.e. an executable or a dynamic library).
 //
 // For each stack frame, it invokes the associated "personality routine", whose address is also
 // stored in the unwind info section.
@@ -37,7 +38,7 @@
 //
 // ~~~ Frame unwind info registration ~~~
 // Each module has its' own frame unwind info section (usually ".eh_frame"), and unwinder needs
-// to know about all of them in order for unwinding to be able to to cross module boundaries.
+// to know about all of them in order for unwinding to be able to cross module boundaries.
 //
 // On some platforms, like Linux, this is achieved by dynamically enumerating currently loaded
 // modules via the dl_iterate_phdr() API and finding all .eh_frame sections.
@@ -45,7 +46,7 @@
 // Others, like Windows, require modules to actively register their unwind info sections by calling
 // __register_frame_info() API at startup.
 // In the latter case it is essential that there is only one copy of the unwinder runtime
-// in the process.  This is usually achieved by linking to the dynamice version of the unwind
+// in the process.  This is usually achieved by linking to the dynamic version of the unwind
 // runtime.
 //
 // Currently Rust uses unwind runtime provided by libgcc.
@@ -200,7 +201,7 @@ fn rust_exception_class() -> _Unwind_Exception_Class {
 
 // We could implement our personality routine in pure Rust, however exception info decoding
 // is tedious.  More importantly, personality routines have to handle various platform
-// quirks, which are not fun to maintain.  For this reason, we attampt to reuse personality
+// quirks, which are not fun to maintain.  For this reason, we attempt to reuse personality
 // routine of the C language: __gcc_personality_v0.
 //
 // Since C does not support exception catching, __gcc_personality_v0 simply always

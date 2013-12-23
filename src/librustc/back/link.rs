@@ -1032,6 +1032,7 @@ fn link_args(sess: Session,
     if sess.targ_cfg.os == abi::OsWin32 {
         // Make sure that we link to the dynamic libgcc, otherwise cross-module
         // DWARF stack unwinding will not work.
+        // This behavior may be overriden by --link-args "-static-libgcc"
         args.push(~"-shared-libgcc");
     }
 
