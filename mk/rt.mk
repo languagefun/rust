@@ -117,7 +117,7 @@ $$(RT_BUILD_DIR_$(1)_$(2))/%.o: rt/%.S  $$(MKFILE_DEPS) \
 $$(RT_BUILD_DIR_$(1)_$(2))/%.o: rt/%.ll  $$(MKFILE_DEPS) \
                      $$(LLVM_CONFIG_$$(CFG_BUILD))
 	@$$(call E, compile: $$@)
-	$$(Q)$(LLC_$(CFG_BUILD)) -filetype=obj -o $$@ $$< -mtriple=$(1)
+	$$(Q)$(LLC_$(CFG_BUILD)) -filetype=obj -mtriple=$(1) -relocation-model=pic -o $$@ $$<
 
 $$(RT_BUILD_DIR_$(1)_$(2))/arch/$$(HOST_$(1))/libmorestack.a: $$(MORESTACK_OBJS_$(1)_$(2))
 	@$$(call E, link: $$@)
